@@ -1,0 +1,15 @@
+games = {
+12345:{...},
+786543:{...}
+}
+
+game = {
+"players:{...}
+}
+
+
+
+player={}
+
+
+len(games[234567]["players"])
