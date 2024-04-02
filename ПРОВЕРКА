@@ -1,0 +1,12 @@
+import telebot
+
+def proverka(players, game):
+    if len(players) > 3:
+        if not game["srart"]:
+            return True
+        return  False
+    return False
+
+
+
+
