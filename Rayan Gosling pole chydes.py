@@ -11,7 +11,16 @@ def test(m):
     else:
         bot.send_message(m.chat.id, "Игра еще не началась!")
 
-
+@bot.message_handler(commands=["join"])
+def join(m):
+    if m.chat.id not in games:
+        bot.send_message(m.chat.id, "Игры нет!")
+        return
+    game = games[m.chat.id]
+    if m.from_user.id not in game["players"]:
+        bot.send_message(m.chat.id, "Вы зашли!")
+    else:
+        bot.send_message(m.chat.id, "Вы уже в игре!")
 
 @bot.message_handler(commands=["hello"])
 def test(m):
