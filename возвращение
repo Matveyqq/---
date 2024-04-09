@@ -1,0 +1,26 @@
+import telebot
+
+
+    bot.send_message(chatid, "Выбирете действие:", reply_markup=kb)
+
+def vozvrojenie(id):
+    game = {id:{
+        "id":id,
+        "players":{},
+        "status":"preapre"
+             }
+             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
