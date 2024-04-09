@@ -1,5 +1,6 @@
 import telebot
 from telebot import types
+import random
 games = {}
 
 bot = telebot.TeleBot("6736959406:AAFwdUBqmBybnmoEZKzB3eau0v2dXO3cOwo")
@@ -10,6 +11,7 @@ def test(m):
      bot.send_message(m.chat.id,"Игра началась!")
     else:
         bot.send_message(m.chat.id, "Игра еще не началась!")
+
 
 @bot.message_handler(commands=["join"])
 def join(m):
@@ -22,6 +24,8 @@ def join(m):
     else:
         bot.send_message(m.chat.id, "Вы уже в игре!")
 
+
+
 @bot.message_handler(commands=["hello"])
 def test(m):
     bot.send_message(m.chat.id,"Приветствую вас!")
@@ -33,6 +37,16 @@ def choose (chatid):
     kb.add(types.KeyboardButton('Назвать слово'))
     kb.add(types.KeyboardButton('Назвать букву'))
     bot.send_message(chatid, "Выбирете действие:", reply_markup=kb)
+
+
+def podgotovka (chatid):
+     set_started(chatid)
+     allplayers = get_players(chatid)
+     listplayers = []
+     for player in allplayers:
+        listplayers.append(player)
+     randomplayer = random.choice(listplayers)
+     set_current_player(chatid, randomplayer)
 
 def proverka(players, game):
     if len(players) > 3:
