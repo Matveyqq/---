@@ -4,12 +4,20 @@ games = {
 }
 
 game = {
-"players:{...}
+"players":{
+  12345:{...},
+  6789:{....}
+},
+"started":False,
+"current_player":12345
 }
 
 
 
-player={}
+player={
+"id":1345,
+"name":"Вася"
+}
 
 
 len(games[234567]["players"])
