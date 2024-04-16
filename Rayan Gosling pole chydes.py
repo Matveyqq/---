@@ -31,6 +31,18 @@ def test(m):
     bot.send_message(m.chat.id,"Приветствую вас!")
 
 
+@bot.message_handler()
+def fdgfdg(m):
+        if get_current_player == m.from_user.id:
+            if m.text == "крутить барабан":
+                roll_drum()
+            if m.text == "назвать слово":
+                name_word()
+            if m.text == "назвать букву":
+                name_letter()
+        else:
+            bot.send_message(m.chat.id,"Этот ход не ваш! Иди плачь.")
+
 def choose (chatid):
     kb = types.ReplyKeyboardMarkup()
     kb.add(types.KeyboardButton('Крутить барабан'))
