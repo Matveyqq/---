@@ -9,7 +9,10 @@ game = {
   6789:{....}
 },
 "started":False,
-"current_player":12345
+"current_player":12345,
+"word":False,
+"letter":False
+"full_word":"test"
 }
 
 
