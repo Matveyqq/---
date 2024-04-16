@@ -42,6 +42,13 @@ def fdgfdg(m):
                 name_letter()
         else:
             bot.send_message(m.chat.id,"Этот ход не ваш! Иди плачь.")
+            
+        game = get_game.get_game(m.chat.id)
+        game["word"]
+        if game["word"] == True:
+            if game["full_word"] == True:
+                if m.text == game["full_word"]:
+
 
 def choose (chatid):
     kb = types.ReplyKeyboardMarkup()
