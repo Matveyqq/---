@@ -1,0 +1,10 @@
+import telebot
+
+
+@bot.tex_messang_handler()
+def proverka_word(m):
+    game = get_game.get_game(m.chat.id)
+    if game["letter"] == True:
+        if (m.text in game["full_word"]):
+
+
