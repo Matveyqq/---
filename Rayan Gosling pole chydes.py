@@ -48,6 +48,9 @@ def fdgfdg(m):
         if game["word"] == True:
             if game["full_word"] == True:
                 if m.text == game["full_word"]:
+        else:
+            bot.send_message(m.chat.id, "Поздравляю!Вы вылетаете отсюда бездарь!")
+            del games[m.from_user.id]
 
 
 def choose (chatid):
