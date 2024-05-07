@@ -21,6 +21,11 @@ player={
 "id":1345,
 "name":"Вася"
 }
-
+x=False
+for player in players:
+  if x == True:
+    game["current_player"] = player
+  if player == game["current_player"]:
+    x=True
 
 len(games[234567]["players"])
