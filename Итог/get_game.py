@@ -7,6 +7,12 @@ def get_players(chatid, games):
     players = game["players"]
     return players
 
+def get_player(chatid, games, playerid):
+    game = games[chatid]
+    players = game["players"]
+    player = players[playerid]
+    return player
+
 def get_started(chatid, games):
     game = games[chatid]
     started = game["start"]

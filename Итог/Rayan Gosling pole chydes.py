@@ -3,20 +3,26 @@ from telebot import types
 import random
 import get_game
 games = {}
+import traceback
 
-bot = telebot.TeleBot("7150377743:AAF310LRUw9NTRqHp6yaUWunRaTpuLeGF9Y")
+bot = telebot.TeleBot("6736959406:AAFwdUBqmBybnmoEZKzB3eau0v2dXO3cOwo")
+print(bot.get_me())
 
 @bot.message_handler(commands=["start"])  # эта функция начинает игру
 def test(m):
-    game = get_game.get_game(m.chat.id, games)
-    players = get_game.get_players(m.chat.id, games)
-    if proverka(players, game) == True:
-     bot.send_message(m.chat.id,"Игра началась!")
-     get_game.set_started(m.chat.id, games)
-     choose(m.chat.id)
+    try:
+        game = get_game.get_game(m.chat.id, games)
+        players = get_game.get_players(m.chat.id, games)
+        if proverka(players, game) == True:
+         bot.send_message(m.chat.id,"Игра началась!")
+         get_game.set_started(m.chat.id, games)
+         perexod(players, game)
 
-    else:
-        bot.send_message(m.chat.id, "Игра еще не началась!")
+        else:
+            bot.send_message(m.chat.id, "Игра еще не началась!")
+    except:
+        print(traceback.format_exc())
+        bot.send_message(m.chat.id, "Вы ошиблись дверью")
 
 @bot.message_handler(commands = ['podgotovka'])
 def podgotovka(m):
@@ -45,34 +51,45 @@ def test(m):
     bot.send_message(m.chat.id,"Приветствую вас!")
 
 def name_word(m):
-    game = get_game.get_game(m.chat.id)
+    game = get_game.get_game(m.chat.id, games)
     if game["word"] == True:
-        if game["full_word"] == True:
             if m.text == game["full_word"]:
-                end_game()
+                end_game(game)
             else:
                 bot.send_message(m.chat.id, "Поздравляю!Вы вылетаете отсюда бездарь!")
                 del games[m.from_user.id]
 
 @bot.message_handler()
 def fdgfdg(m):
-        if get_game.get_current_player == m.from_user.id:
-            if m.text == "крутить барабан":
+    try:
+        game = get_game.get_game(m.chat.id, games)
+        if game["word"] == True:
+            name_word(m)
+            game["word"] = False
+        if game["letter"] == True:
+            proverka_letter(m)
+            game["letter"] = False
+        if get_game.get_current_player(m.chat.id, games) == m.from_user.id:
+            if m.text == "Крутить барабан":
                 prokrutka_barabana(m)
-            if m.text == "назвать слово":
-                name_word(m)
-            if m.text == "назвать букву":
-                proverka_letter(m)
+            if m.text == "Назвать слово":
+                game["word"] = True
+                bot.send_message(m.chat.id, "А теперь назовите слово:")
+            if m.text == "Назвать букву":
+                game["letter"] = True
+                bot.send_message(m.chat.id, "А теперь назовите букву:")
         else:
-            bot.send_message(m.chat.id,"Этот ход не ваш! Иди плачь.")
+            bot.send_message(m.chat.id,"Этот ход не ваш! Иди поплачь лысый.")
+    except:
+        pass
             
 
 
 
 
-def end_game(m):
-    bot.send_message(m.from_user.id, " побеждает!Поздравляем!")
-    del games[m.chat.id]
+def end_game(game):
+    bot.send_message(game["id"], " Раян Гослинг Сигма Слово Пацана! Вы победили!")
+    del games[game["id"]]
 
 def choose (chatid):
     kb = types.ReplyKeyboardMarkup()
@@ -92,27 +109,30 @@ def podgotovka (chatid):
      get_game.set_current_player(chatid, games, randomplayer)
 
 def proverka_letter(m):# проверяет букву
-    game = get_game.get_game(m.chat.id)
-    players = get_game.get_players(m.chat.id)
+    game = get_game.get_game(m.chat.id, games)
+    players = get_game.get_players(m.chat.id, games)
     if game["letter"] == True:#если буква верна
         if (m.text in game["full_word"]):# если в тв тексте в полно слове
-            bot.send_message(m.chat.id, "Есть такая буква.")
+            bot.send_message(m.chat.id, "Боже лакер,есть такая буква.")
 
-    else:
-        bot.send_message(m.chat.id, "Буква не правильная, ход отдается дкугому игроку.")
-        perexod(players, game)#вызов функции
+        else:
+            bot.send_message(m.chat.id, "Твое мнение не учитывается,СЭР ДА СЭР, ход отдается другому игроку.")
+            perexod(players, game)#вызов функции
 def perexod(players, game):# осушествляет переход хода к другому игроку
         u=False
+        x = False
         for player in players:
             if x ==True:# если х верен
                 game["current_player"] = player# курент плаер равно праер
                 u=True
+                choose(game["id"])
                 break# остановка
             if player == game ["current_player"]:# если игрок равен курент плаер
                 x = True# х верен
         if u == False:# если u ложная
             for player in players:
                 game["current_player"] = player# курент плаер равен игроку
+                choose(game["id"])
                 break# остановка
 
 list = [0,350,400,450,500,550,600,650,700,850,900,950,1000,"сектор СИГМА","сектор ПРИЗ","банкрот","сектор ПЛЮС"]
@@ -121,20 +141,29 @@ points = 0
 def prokrutka_barabana(m): # Функция прокрутки барабана,Матвей
     list = [0, 350, 400, 450, 500, 550, 600, 650, 700, 850, 900, 950, 1000, "сектор СИГМА", "сектор ПРИЗ", "банкрот",
             "сектор ПЛЮС"]
-    game = get_game.get_game(m.chat.id)
+    game = get_game.get_game(m.chat.id, games)
     players = get_game.get_players(m.chat.id, games)
+    player = get_game.get_player(m.chat.id, games, m.from_user.id)
     points = 0
     choose = random.choice(list)
     print(choose)
     if type(choose) == int: # Если выбор равен инт то к очкам прибовляется то что выпало на барабане
         points += choose
         bot.send_message(m.chat.id,f"Вы получили {choose} баллов")
+        player["points"] += choose
+        bot.send_message(m.chat.id, f"Ваши баллы: {player["points"]}")
         perexod(players, game)
     else:
         if choose == "сектор СИГМА":
-            print *2
+            player["points"] *= 2
+            bot.send_message(m.chat.id, f"Ваши баллы умножены на 2!")
+            bot.send_message(m.chat.id, f"Ваши баллы: {player["points"]}")
+            perexod(players, game)
     if choose == "банкрот":
-        points = 0
+        player["points"] = 0
+        bot.send_message(m.chat.id, f"Ваши баллы сгорели!")
+        bot.send_message(m.chat.id, f"Ваши баллы: {player["points"]}")
+        perexod(players, game)
 
 
 def proverka(players, game):
@@ -162,7 +191,8 @@ def create_game(chatid):
 def create_player(pid, pname):
     player={
     "id":pid,
-    "name":pname
+    "name":pname,
+    "points":0
     }
     return player
 
